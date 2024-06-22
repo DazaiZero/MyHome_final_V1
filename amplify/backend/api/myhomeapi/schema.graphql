@@ -1,0 +1,32 @@
+type AppUsers @model 
+@auth(rules: [{ allow: public, provider: iam, operations: [create, update] },
+{ allow: owner , provider: userPools , operations: [create, update, delete, read] },
+{ allow: private , provider: userPools , operations: [create, update, delete, read] }])
+@key(name: "username", fields: ["username","userToken"], queryField: "getUserData") {
+  id: ID!
+  name: String!
+  username: String!
+  email: String!
+  phone_number: String!
+  userToken: String!
+  settings: [UserSettings] @connection(keyName: "byUserId", fields: ["userToken"])
+  deviceCount: Int
+}
+ 
+type UserSettings @model 
+@auth(rules: [{ allow: public, provider: iam, operations: [create, update] },
+{ allow: owner , provider: userPools, operations: [create, update, delete, read] },
+{ allow: private , provider: userPools, operations: [create, update, delete, read] }])
+@key(name: "byUserId", fields: ["userId"], queryField: "SettingsByUserId"){
+  id: ID!
+  bssid: String
+  ssid: String
+  deviceName: String
+  userId: String
+  username: String
+  s1: String
+  s2: String
+  s3: String
+}
+
+
